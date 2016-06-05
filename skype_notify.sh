@@ -41,8 +41,12 @@
 USER_HOME_PATH="/home/$USER"
 # файл конфигурации
 CONFIG_FILE_PATH="$USER_HOME_PATH/.skype_notify"
+# директория с файлами
+CONFIG_DIR_PATH="$USER_HOME_PATH/.skype_notify.d"
+# лог ошибок
+ERROR_LOG="$CONFIG_DIR_PATH/error.log"
 # директория с аватарами контактов
-AVATAR_IMAGE_PATH="$USER_HOME_PATH/.skype_notify.d/avatars"
+AVATAR_IMAGE_PATH="$CONFIG_DIR_PATH/avatars"
 # никнейм пользователя в скайпе
 SKYPE_NAME=""
 # директория с БД скайпа
@@ -53,7 +57,7 @@ DEFAULT_NOTIFY_IMAGE="skype"
 
 CONTACT_SKYPENAME=$1
 CONTACT_USERNAME=$2
-CONTACT_MESSAGE=$3     # зачастую содержит ещё и имя = $CONTACT_USERNAME
+CONTACT_MESSAGE=$4
 
 ##
 # Генерирует название файла с аватаром пользователя по никнейму.
@@ -169,6 +173,13 @@ init ()
 		# устанавливаем путь до БД скайпа
 		SKYPE_DB_PATH=${SKYPE_DB_PATH/"_SKYPE_NAME_"/$SKYPE_NAME}
 	fi
+
+	# если не существует создаём каталог для хранения файлов скрипта
+	if [ ! -d "$CONFIG_DIR_PATH" ];then
+		if [ ! -L "$CONFIG_DIR_PATH" ]; then
+			mkdir -p $CONFIG_DIR_PATH
+		fi
+	fi
 	
 	# создаём, если не существует, каталог для хранения аватаров
 	if [ ! -d "$AVATAR_IMAGE_PATH" ]; then
@@ -180,13 +191,9 @@ init ()
 
 # проводим инициализацию скрипта
 init
-
-echo $CONTACT_MESSAGE
-# удаляем из сообщения имя отправителя
-CONTACT_MESSAGE=${CONTACT_MESSAGE/"$CONTACT_USERNAME:"/""}
 # устанавливаем картинку сообщения
 set_notify_image
 
 #           имя контакта        сообщение             картинка
-notify-send "$CONTACT_USERNAME" "$CONTACT_MESSAGE" -i $NOTIFY_IMAGE
+notify-send "$CONTACT_USERNAME" "$CONTACT_MESSAGE" -i $NOTIFY_IMAGE 2> $ERROR_LOG
 
