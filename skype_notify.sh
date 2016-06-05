@@ -69,6 +69,8 @@ save_avatar_image_from_db_by_skypename ()
 	AVATAR_PATH_NAME=$(generate_avatar_path_name $1)
 	sqlite3 $SKYPE_DB_PATH "SELECT writefile('$AVATAR_PATH_NAME', avatar_image) FROM contacts WHERE skypename='$1' AND avatar_image NOT NULL;"
 	if [ -f "$AVATAR_PATH_NAME" ]; then
+		# удаляем первые двай байта - почему-то первые 2-а байта в получаемом
+		# файле портят файл-изображения
 		tail -c +2 $AVATAR_PATH_NAME > "/tmp/tmp_avatar"
 		mv "/tmp/tmp_avatar" $AVATAR_PATH_NAME
 	fi
@@ -98,4 +100,6 @@ if [ ! -f "$CONTACT_AVATAR" ]; then
 	fi
 fi
 
+#           имя контакта        сообщение             картинка
 notify-send "$CONTACT_USERNAME" "$CONTACT_MESSAGE" -i $NOTIFY_IMAGE
+
