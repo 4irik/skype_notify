@@ -180,6 +180,10 @@ init ()
 
 # проводим инициализацию скрипта
 init
+
+echo $CONTACT_MESSAGE
+# удаляем из сообщения имя отправителя
+CONTACT_MESSAGE=${CONTACT_MESSAGE/"$CONTACT_USERNAME:"/""}
 # устанавливаем картинку сообщения
 set_notify_image
 
