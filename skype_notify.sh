@@ -57,7 +57,13 @@ DEFAULT_NOTIFY_IMAGE="skype"
 
 CONTACT_SKYPENAME=$1
 CONTACT_USERNAME=$2
-CONTACT_MESSAGE=$4
+CONTACT_MESSAGE=""
+
+# считываем сообщение
+for message_chunk in ${@:4}
+do
+    CONTACT_MESSAGE="$CONTACT_MESSAGE$message_chunk "
+done
 
 ##
 # Генерирует название файла с аватаром пользователя по никнейму.
@@ -117,6 +123,7 @@ set_notify_image()
 		fi
 	fi
 }
+
 
 ##
 # Удаляет у строки слева и справа пробелы или переданный в качестве второго аргумента символ
