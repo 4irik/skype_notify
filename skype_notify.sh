@@ -37,10 +37,14 @@
 # 
 ################################################################################
 
+
+#каталог скрипта
+SCRIPT_PATH=$(dirname $0)
+
 # импортируем функции
-. params_common.sh
-. func_common.sh
-. func_config.sh
+. $SCRIPT_PATH/params_common.sh
+. $SCRIPT_PATH/func_common.sh
+. $SCRIPT_PATH/func_config.sh
 
 CONTACT_SKYPENAME=$1
 CONTACT_USERNAME=$2
@@ -118,27 +122,6 @@ set_notify_image()
 	fi
 }
 
-
-##
-# Удаляет у строки слева и справа пробелы или переданный в качестве второго аргумента символ
-#
-# @param string исходная строка
-# @param string|null символ, который нужно удалить, если ничего не передано будут удалены пробелы
-# @Stdout string 
-##
-trim ()
-{
-	SOURCE_STRING=$1
-	DELETED_CHAR=$2
-	if [ "$DELETED_CHAR" = "" ]; then
-		DELETED_CHAR=" "
-	fi
-	
-	TMP_VALUE=${SOURCE_STRING##*($DELETED_CHAR)}
-	TMP_VALUE=${TMP_VALUE%%*($DELETED_CHAR)}
-	echo $TMP_VALUE
-}
-
 ##
 # Возвращет значение параметра из конфигурационного файла
 # 
@@ -157,17 +140,17 @@ get_config_param_by_name ()
 # Инициализация скрипта
 ##
 init ()
-{
+{	
 	# читаем конфигурацию
 	if [ ! -f "$CONFIG_FILE_PATH" ]; then
-		echo "Не обнаружен файл конфигурации $CONFIG_FILE_PATH" # todo выводить в поток ошибок
-		
+		echo "Не обнаружен файл конфигурации $CONFIG_FILE_PATH" >> $ERROR_LOG # todo выводить в поток ошибок
+
 		exit 1
 	else
 		# получаем skype-имя пользователя
 		SKYPE_NAME=$(get_config_param_by_name "skype_name")
 		if [ "$SKYPE_NAME" = "" ]; then
-			echo "В конфигурационном файле не установлено Skype-имя пользователя."
+			echo "В конфигурационном файле не установлено Skype-имя пользователя." >> $ERROR_LOG
 			
 			exit 1
 		fi
@@ -196,5 +179,5 @@ init
 set_notify_image
 
 #           имя контакта        сообщение             картинка
-notify-send "$CONTACT_USERNAME" "$CONTACT_MESSAGE" -i $NOTIFY_IMAGE 2> $ERROR_LOG
+notify-send "$CONTACT_USERNAME" "$CONTACT_MESSAGE" -i $NOTIFY_IMAGE 2>>$ERROR_LOG
 
