@@ -1,0 +1,68 @@
+#!/bin/bash
+
+################################################################################
+# Конфигуратор. Предназначен для установки параметров скрипта.
+################################################################################
+
+# импортируем функции
+. params_common.sh
+. func_common.sh
+. func_config.sh
+
+case $1 in
+	"S" | "s" )
+		echo "Введите скайп-имя своего аккаунта:"
+		read USER_SKYPE_NAME
+		
+	    USER_SKYPE_NAME=$(trim $USER_SKYPE_NAME)
+		if [ "$USER_SKYPE_NAME" = "" ]; then
+		   	echo "Скайп-имя пользвоателя не может быть пустым"
+			exit 1
+		fi
+		set_config_param_by_name skype_name $USER_SKYPE_NAME;;
+
+	
+	"C" | "c" )
+		echo
+		echo "Содержание конфигурационного файла \"$CONFIG_FILE_PATH\":"
+		echo "================================================================================"
+		cat $CONFIG_FILE_PATH | grep -v "#"
+		echo "================================================================================"
+		echo;;
+
+	
+	"A" | "a" )
+		echo
+		echo "Введите путь до файла:"
+		read NEW_DEFAULT_AVATAR_PATH
+		NEW_DEFAULT_AVATAR_PATH=$(trim $NEW_DEFAULT_AVATAR_PATH)
+		if [ "$NEW_DEFAULT_AVATAR_PATH" = "" ]; then
+			echo "Путь до файла не может быть пустым"
+			exit 1
+		fi
+		if [ ! -f "$NEW_DEFAULT_AVATAR_PATH" ]; then
+			echo "Файл не найден"
+			exit 1
+		fi
+		cp $NEW_DEFAULT_AVATAR_PATH $AVATAR_IMAGE_PATH/$DEFAULT_AVATAR_NAME".jpg"
+		if [ ! -f "$NEW_DEFAULT_AVATAR_PATH" ]; then
+			echo "Файл $NEW_DEFAULT_AVATAR_PATH не удалось скопировать"
+			exit 1
+		fi
+		echo "Аватар по-умолчанию установлен."
+		echo;;
+		
+		
+	* )
+		echo
+		echo "Скрипт конфигурации для скрипта SkypeNotifer"
+		echo
+		echo "Доступные операции:"
+		echo "    [S]et skype-name      установить скайп-имя аккаунта"
+		echo "    Show [C]onfig         просмотреть конфигурацию"
+		echo "    Set default [A]vatar  установить аватар контакта по-умолчанию"
+		echo;;
+esac
+
+exit 0
+

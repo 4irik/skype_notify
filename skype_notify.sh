@@ -37,23 +37,10 @@
 # 
 ################################################################################
 
-# директория пользователя
-USER_HOME_PATH="/home/$USER"
-# файл конфигурации
-CONFIG_FILE_PATH="$USER_HOME_PATH/.skype_notify"
-# директория с файлами
-CONFIG_DIR_PATH="$USER_HOME_PATH/.skype_notify.d"
-# лог ошибок
-ERROR_LOG="$CONFIG_DIR_PATH/error.log"
-# директория с аватарами контактов
-AVATAR_IMAGE_PATH="$CONFIG_DIR_PATH/avatars"
-# никнейм пользователя в скайпе
-SKYPE_NAME=""
-# директория с БД скайпа
-SKYPE_DB_PATH="$USER_HOME_PATH/.Skype/_SKYPE_NAME_/main.db"
-
-# картинка уведомления по-умолчанию
-DEFAULT_NOTIFY_IMAGE="skype"
+# импортируем функции
+. params_common.sh
+. func_common.sh
+. func_config.sh
 
 CONTACT_SKYPENAME=$1
 CONTACT_USERNAME=$2
@@ -95,6 +82,7 @@ generate_avatar_path_name ()
 save_avatar_image_from_db_by_skypename ()
 {
 	AVATAR_PATH_NAME=$(generate_avatar_path_name $1)
+	# todo избавиться от вывода сообщения
 	sqlite3 $SKYPE_DB_PATH "SELECT writefile('$AVATAR_PATH_NAME', avatar_image) FROM contacts WHERE skypename='$1' AND avatar_image NOT NULL;"
 	if [ -f "$AVATAR_PATH_NAME" ]; then
 		# удаляем первые двай байта - почему-то первые 2-а байта в получаемом
@@ -118,9 +106,15 @@ set_notify_image()
 		# ищем и сохраняем на диск аватар контакта из БД скайпа
 		save_avatar_image_from_db_by_skypename $CONTACT_SKYPENAME
 		if [ ! -f "$CONTACT_AVATAR" ]; then
-			# у контакта нет аватара
-			NOTIFY_IMAGE=$DEFAULT_NOTIFY_IMAGE
-		fi
+			# у контакта нет аватара, ищем картинку по-умолчанию
+			CONTACT_AVATAR=$(generate_avatar_path_name $DEFAULT_AVATAR_NAME)
+			if [ -f "$CONTACT_AVATAR" ]; then
+				NOTIFY_IMAGE=$CONTACT_AVATAR
+			else
+				# ставим иконку скайпа
+				NOTIFY_IMAGE=$DEFAULT_NOTIFY_IMAGE
+			fi
+		fi	
 	fi
 }
 
