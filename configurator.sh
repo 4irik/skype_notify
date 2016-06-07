@@ -33,7 +33,7 @@ case $1 in
 	
 	"A" | "a" )
 		echo
-		echo "Введите путь до файла:"
+		echo "Введите полный путь до файла:"
 		read NEW_DEFAULT_AVATAR_PATH
 		NEW_DEFAULT_AVATAR_PATH=$(trim $NEW_DEFAULT_AVATAR_PATH)
 		if [ "$NEW_DEFAULT_AVATAR_PATH" = "" ]; then
@@ -41,7 +41,7 @@ case $1 in
 			exit 1
 		fi
 		if [ ! -f "$NEW_DEFAULT_AVATAR_PATH" ]; then
-			echo "Файл не найден"
+			echo "Файл \"$NEW_DEFAULT_AVATAR_PATH\" не найден"
 			exit 1
 		fi
 		cp $NEW_DEFAULT_AVATAR_PATH $AVATAR_IMAGE_PATH/$DEFAULT_AVATAR_NAME".jpg"
@@ -52,15 +52,43 @@ case $1 in
 		echo "Аватар по-умолчанию установлен."
 		echo;;
 		
-		
+	"U" | "u" )
+		echo
+		echo "Введите скайп-имя пользователя:"
+		read USER_NAME
+		USER_NAME=$(trim $USER_NAME)
+		if [ "$USER_NAME" = "" ];then
+			echo "Скайп-имя пользователя не может быть пустым"
+			exit 1
+		fi
+		echo "Введите полный путь до файла:"
+		read USER_AVATAR_PATH
+		USER_AVATAR_PATH=$(trim $USER_AVATAR_PATH)
+		if [ "$USER_AVATAR_PATH" = "" ]; then
+			echo "Путь до файла не может быть пустым"
+			exit 1
+		fi
+		if [ ! -f "$USER_AVATAR_PATH" ]; then
+			echo "Файл \"$USER_AVATAR_PATH\" не найден"
+			exit 1
+		fi
+		cp $USER_AVATAR_PATH $AVATAR_IMAGE_PATH/$USER_NAME".jpg"
+		if [ ! -f "$USER_AVATAR_PATH" ]; then
+			echo "Файл $USER_AVATAR_PATH не удалось скопировать"
+			exit 1
+		fi
+		echo "Аватар для пользователя \"$USER_NAME\" установлен."
+		echo;;
+	
 	* )
 		echo
 		echo "Скрипт конфигурации для скрипта SkypeNotifer"
 		echo
 		echo "Доступные операции:"
-		echo "    [S]et skype-name      установить скайп-имя аккаунта"
-		echo "    Show [C]onfig         просмотреть конфигурацию"
-		echo "    Set default [A]vatar  установить аватар контакта по-умолчанию"
+		echo "    [S]et skype-name       установить скайп-имя аккаунта"
+		echo "    Show [C]onfig          просмотреть конфигурацию"
+		echo "    Set default [A]vatar   установить аватар контакта по-умолчанию"
+		echo "    Set avatar for [U]ser  установить аватар для контакта"
 		echo;;
 esac
 
