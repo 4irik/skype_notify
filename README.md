@@ -22,7 +22,7 @@ $ echo skype_name=my_skype_name > .skype_notify
 "Первое сообщение получено" и "Сообщение получено" в:
 
 ```bash
-~\path\to\skype-notify\skype_notify.sh %sskype %sname %smessage
+~\path\to\skype-notify\skype_notify.sh %sskype "%sname" "%smessage"
 ```
 
 как паказано на картинке:
