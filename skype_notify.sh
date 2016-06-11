@@ -48,13 +48,7 @@ SCRIPT_PATH=$(dirname $0)
 
 CONTACT_SKYPENAME=$1
 CONTACT_USERNAME=$2
-CONTACT_MESSAGE=""
-
-# считываем сообщение
-for message_chunk in ${@:4}
-do
-    CONTACT_MESSAGE="$CONTACT_MESSAGE$message_chunk "
-done
+CONTACT_MESSAGE=$3
 
 ##
 # Генерирует название файла с аватаром пользователя по никнейму.
@@ -137,6 +131,17 @@ get_config_param_by_name ()
 }
 
 ##
+# Удаление из сообщения имени отправителя.
+#
+# @param string имя отправителя
+# @param string сообщение
+##
+delete_name_from_message ()
+{
+	CONTACT_MESSAGE=${CONTACT_MESSAGE/"$CONTACT_USERNAME:"/""}
+}
+
+##
 # Инициализация скрипта
 ##
 init ()
@@ -175,6 +180,8 @@ init ()
 
 # проводим инициализацию скрипта
 init
+# удаление из сообщения имени отправителя
+delete_name_from_message
 # устанавливаем картинку сообщения
 set_notify_image
 
