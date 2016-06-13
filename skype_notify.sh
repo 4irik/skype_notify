@@ -45,6 +45,7 @@ SCRIPT_PATH=$(dirname $0)
 . $SCRIPT_PATH/params_common.sh
 . $SCRIPT_PATH/func_common.sh
 . $SCRIPT_PATH/func_config.sh
+. $SCRIPT_PATH/func_white_list.sh
 
 CONTACT_SKYPENAME=$1
 CONTACT_USERNAME=$2
@@ -83,8 +84,8 @@ save_avatar_image_from_db_by_skypename ()
 	# todo избавиться от вывода сообщения
 	sqlite3 $SKYPE_DB_PATH "SELECT writefile('$AVATAR_PATH_NAME', avatar_image) FROM contacts WHERE skypename='$1' AND avatar_image NOT NULL;"
 	if [ -f "$AVATAR_PATH_NAME" ]; then
-		# удаляем первые двай байта - почему-то первые 2-а байта в получаемом
-		# файле портят файл-изображения
+		# удаляем первые два байта - почему-то первые 2-а байта в получаемом
+		# файле портят файл-изображение
 		tail -c +2 $AVATAR_PATH_NAME > "/tmp/tmp_avatar"
 		mv "/tmp/tmp_avatar" $AVATAR_PATH_NAME
 	fi
@@ -180,6 +181,16 @@ init ()
 
 # проводим инициализацию скрипта
 init
+
+# проверяем, включен ли белый список, если включен то ищем
+# пользвателя в нём
+if [ $(get_config_param_by_name white_list) = "on" ]; then
+	if wl_user_exists $CONTACT_SKYPENAME
+	then
+		exit 0
+	fi
+fi
+
 # удаление из сообщения имени отправителя
 delete_name_from_message
 # устанавливаем картинку сообщения

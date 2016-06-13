@@ -8,6 +8,7 @@
 . params_common.sh
 . func_common.sh
 . func_config.sh
+. func_white_list.sh
 
 case $1 in
 	"S" | "s" )
@@ -51,6 +52,7 @@ case $1 in
 		fi
 		echo "Аватар по-умолчанию установлен."
 		echo;;
+	
 		
 	"U" | "u" )
 		echo
@@ -80,15 +82,71 @@ case $1 in
 		echo "Аватар для пользователя \"$USER_NAME\" установлен."
 		echo;;
 	
+
+	"W" | "w" )
+		echo
+		echo "Введите скайп-имя пользователя:"
+		read USER_NAME
+		USER_NAME=$(trim $USER_NAME)
+		if [ "$USER_NAME" = "" ];then
+			echo "Скайп-имя пользователя не может быть пустым"
+			exit 1
+		fi
+		# todo: проверка наличия пользователя в контактах
+		wl_include_user $USER_NAME
+		echo "Пользователь \"$USER_NAME\" добавлен в белый список."
+		echo;;
+
+
+	"D" | "d" )
+		echo
+		echo "Введите скайп-имя пользователя:"
+		read USER_NAME
+		USER_NAME=$(trim $USER_NAME)
+		if [ "$USER_NAME" = "" ];then
+			echo "Скайп-имя пользователя не может быть пустым"
+			exit 1
+		fi
+		wl_exclude_user $USER_NAME
+		echo "Пользователь \"$USER_NAME\" удалён из белого списока."
+		echo;;
+
+
+	"swl" )
+		echo
+		echo "Состав белого списка:"
+		wl_show
+		echo;;
+
+
+	"ewl" )
+		echo
+		set_config_param_by_name white_list on
+		echo "Белый список включён"
+		echo;;
+
+	
+	"dwl" )
+		echo
+	    delete_config_param_by_name white_list
+		echo "Белый список выключен"
+		echo;;
+		
+		
 	* )
 		echo
 		echo "Скрипт конфигурации для скрипта SkypeNotifer"
 		echo
 		echo "Доступные операции:"
-		echo "    [S]et skype-name       установить скайп-имя аккаунта"
-		echo "    Show [C]onfig          просмотреть конфигурацию"
-		echo "    Set default [A]vatar   установить аватар контакта по-умолчанию"
-		echo "    Set avatar for [U]ser  установить аватар для контакта"
+		echo "    [S]et skype-name         установить скайп-имя аккаунта"
+		echo "    Show [C]onfig            просмотреть конфигурацию"
+		echo "    Set default [A]vatar     установить аватар контакта по-умолчанию"
+		echo "    Set avatar for [U]ser    установить аватар для контакта"
+		echo "    Add to [W]hite-list      добавить пользователя в белый список"
+		echo "    [D]elte from white-list  добавить пользователя в белый список"
+		echo "    Show white-list [swl]    просмотр белого списка"
+		echo "    Enable white-list [ewl]  включение белого списка"
+		echo "    Disable white-list [dwl] выключение белого списка"
 		echo;;
 esac
 
