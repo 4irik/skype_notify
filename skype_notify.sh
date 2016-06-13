@@ -83,8 +83,8 @@ save_avatar_image_from_db_by_skypename ()
 	# todo избавиться от вывода сообщения
 	sqlite3 $SKYPE_DB_PATH "SELECT writefile('$AVATAR_PATH_NAME', avatar_image) FROM contacts WHERE skypename='$1' AND avatar_image NOT NULL;"
 	if [ -f "$AVATAR_PATH_NAME" ]; then
-		# удаляем первые двай байта - почему-то первые 2-а байта в получаемом
-		# файле портят файл-изображения
+		# удаляем первые два байта - почему-то первые 2-а байта в получаемом
+		# файле портят файл-изображение
 		tail -c +2 $AVATAR_PATH_NAME > "/tmp/tmp_avatar"
 		mv "/tmp/tmp_avatar" $AVATAR_PATH_NAME
 	fi

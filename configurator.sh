@@ -51,6 +51,7 @@ case $1 in
 		fi
 		echo "Аватар по-умолчанию установлен."
 		echo;;
+	
 		
 	"U" | "u" )
 		echo
@@ -80,15 +81,55 @@ case $1 in
 		echo "Аватар для пользователя \"$USER_NAME\" установлен."
 		echo;;
 	
+
+	"W" | "w" )
+		echo
+		echo "Введите скайп-имя пользователя:"
+		read USER_NAME
+		USER_NAME=$(trim $USER_NAME)
+		if [ "$USER_NAME" = "" ];then
+			echo "Скайп-имя пользователя не может быть пустым"
+			exit 1
+		fi
+		# todo: проверка наличия пользователя в контактах
+		WHITE_LIST="$CONFIG_DIR_PATH/white_list"
+		config=$(cat $WHITE_LIST | grep -v $USER_NAME)
+		echo $config>$WHITE_LIST
+		echo $USER_NAME>>$WHITE_LIST
+		echo "Пользователь \"$USER_NAME\" добавлен в белый список."
+		echo;;
+
+
+	"D" | "d" )
+		echo
+		echo "Введите скайп-имя пользователя:"
+		read USER_NAME
+		USER_NAME=$(trim $USER_NAME)
+		if [ "$USER_NAME" = "" ];then
+			echo "Скайп-имя пользователя не может быть пустым"
+			exit 1
+		fi
+		WHITE_LIST="$CONFIG_DIR_PATH/white_list"
+		config=$(cat $WHITE_LIST | grep -v $USER_NAME)
+		echo $config>$WHITE_LIST
+		echo "Пользователь \"$USER_NAME\" удалён из белого списока."
+		echo;;
+
+	
 	* )
 		echo
 		echo "Скрипт конфигурации для скрипта SkypeNotifer"
 		echo
 		echo "Доступные операции:"
-		echo "    [S]et skype-name       установить скайп-имя аккаунта"
-		echo "    Show [C]onfig          просмотреть конфигурацию"
-		echo "    Set default [A]vatar   установить аватар контакта по-умолчанию"
-		echo "    Set avatar for [U]ser  установить аватар для контакта"
+		echo "    [S]et skype-name         установить скайп-имя аккаунта"
+		echo "    Show [C]onfig            просмотреть конфигурацию"
+		echo "    Set default [A]vatar     установить аватар контакта по-умолчанию"
+		echo "    Set avatar for [U]ser    установить аватар для контакта"
+		echo "    Add to [W]hite-list      добавить пользователя в белый список"
+		echo "    [D]elte from white-list  добавить пользователя в белый список"
+		echo "    Show white-list          показать белый список"
+		echo "    Enable white-list        включить белый список"
+		echo "    Disable white-list       выключить белый список"
 		echo;;
 esac
 
