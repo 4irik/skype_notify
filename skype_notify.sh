@@ -45,6 +45,7 @@ SCRIPT_PATH=$(dirname $0)
 . $SCRIPT_PATH/params_common.sh
 . $SCRIPT_PATH/func_common.sh
 . $SCRIPT_PATH/func_config.sh
+. $SCRIPT_PATH/func_white_list.sh
 
 CONTACT_SKYPENAME=$1
 CONTACT_USERNAME=$2
@@ -180,6 +181,16 @@ init ()
 
 # проводим инициализацию скрипта
 init
+
+# проверяем, включен ли белый список, если включен то ищем
+# пользвателя в нём
+if [ $(get_config_param_by_name white_list) = "on" ]; then
+	if wl_user_exists $CONTACT_SKYPENAME
+	then
+		exit 0
+	fi
+fi
+
 # удаление из сообщения имени отправителя
 delete_name_from_message
 # устанавливаем картинку сообщения

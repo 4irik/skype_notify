@@ -22,3 +22,5 @@ SKYPE_DB_PATH="$USER_HOME_PATH/.Skype/_SKYPE_NAME_/main.db"
 DEFAULT_AVATAR_NAME="default"
 # картинка уведомления по-умолчанию
 DEFAULT_NOTIFY_IMAGE="skype"
+# файл белого списка пользователей
+WHITE_LIST_FILE="$CONFIG_DIR_PATH/white_list"

@@ -8,6 +8,7 @@
 . params_common.sh
 . func_common.sh
 . func_config.sh
+. func_white_list.sh
 
 case $1 in
 	"S" | "s" )
@@ -92,10 +93,7 @@ case $1 in
 			exit 1
 		fi
 		# todo: проверка наличия пользователя в контактах
-		WHITE_LIST="$CONFIG_DIR_PATH/white_list"
-		config=$(cat $WHITE_LIST | grep -v $USER_NAME)
-		echo $config>$WHITE_LIST
-		echo $USER_NAME>>$WHITE_LIST
+		wl_include_user $USER_NAME
 		echo "Пользователь \"$USER_NAME\" добавлен в белый список."
 		echo;;
 
@@ -109,13 +107,32 @@ case $1 in
 			echo "Скайп-имя пользователя не может быть пустым"
 			exit 1
 		fi
-		WHITE_LIST="$CONFIG_DIR_PATH/white_list"
-		config=$(cat $WHITE_LIST | grep -v $USER_NAME)
-		echo $config>$WHITE_LIST
+		wl_exclude_user $USER_NAME
 		echo "Пользователь \"$USER_NAME\" удалён из белого списока."
 		echo;;
 
+
+	"swl" )
+		echo
+		echo "Состав белого списка:"
+		wl_show
+		echo;;
+
+
+	"ewl" )
+		echo
+		set_config_param_by_name white_list on
+		echo "Белый список включён"
+		echo;;
+
 	
+	"dwl" )
+		echo
+	    delete_config_param_by_name white_list
+		echo "Белый список выключен"
+		echo;;
+		
+		
 	* )
 		echo
 		echo "Скрипт конфигурации для скрипта SkypeNotifer"
@@ -127,9 +144,9 @@ case $1 in
 		echo "    Set avatar for [U]ser    установить аватар для контакта"
 		echo "    Add to [W]hite-list      добавить пользователя в белый список"
 		echo "    [D]elte from white-list  добавить пользователя в белый список"
-		echo "    Show white-list          показать белый список"
-		echo "    Enable white-list        включить белый список"
-		echo "    Disable white-list       выключить белый список"
+		echo "    Show white-list [swl]    просмотр белого списка"
+		echo "    Enable white-list [ewl]  включение белого списка"
+		echo "    Disable white-list [dwl] выключение белого списка"
 		echo;;
 esac
 
