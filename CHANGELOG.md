@@ -4,14 +4,14 @@
 коммита, в противном случае - номер версии.
 
 ## [0071296] - 2016-06-11
-## Added
+### Added
  - удаление из сообщения имени отправителя.
  
 ### Fixed
  - fix issue [#1](https://github.com/4irik/skype_notify/issues/1), многословные
  никнеймы теперь обрабатываются коррекно.
  
-## Changed
+### Changed
  - поля `%sname` и `%smessage` передаываемые как параметры запуска скрипта 
  `skype_notify.sh` должны быть заключены в двойные кавычки:
  `~\path\to\skype-notify\skype_notify.sh %sskype "%sname" "%smessage"`.
