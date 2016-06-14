@@ -11,8 +11,8 @@
 ##
 wl_exclude_user ()
 {
-	local config=$(cat $WHITE_LIST_FILE | grep -v $1)
-	echo $config>$WHITE_LIST_FILE
+	cat $WHITE_LIST_FILE | grep -v $1 > /tmp/wl-tmp
+	mv /tmp/wl-tmp $WHITE_LIST_FILE
 }
 
 ##
