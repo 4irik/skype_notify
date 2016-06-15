@@ -25,8 +25,8 @@ get_config_param_by_name ()
 ##
 delete_config_param_by_name ()
 {
-	CONFIG=$(cat $CONFIG_FILE_PATH | grep -v $1)
-	echo $CONFIG > $CONFIG_FILE_PATH
+	cat $CONFIG_FILE_PATH | grep -v $1 > /tmp/cf-tmp
+	mv /tmp/cf-tmp $CONFIG_FILE_PATH
 }
 
 ##
