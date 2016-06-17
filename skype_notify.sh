@@ -43,6 +43,7 @@ SCRIPT_PATH=$(dirname $0)
 
 # импортируем функции
 . $SCRIPT_PATH/params_common.sh
+. $SCRIPT_PATH/exit_codes.sh
 . $SCRIPT_PATH/func_common.sh
 . $SCRIPT_PATH/func_config.sh
 . $SCRIPT_PATH/func_white_list.sh
