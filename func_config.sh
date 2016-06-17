@@ -25,8 +25,9 @@ get_config_param_by_name ()
 ##
 delete_config_param_by_name ()
 {
-	cat $CONFIG_FILE_PATH | grep -v $1 > /tmp/cf-tmp
-	mv /tmp/cf-tmp $CONFIG_FILE_PATH
+	local tmpdir=`mktemp` || { exit $EXIT_ERROR_CREATE_TMPFILE; }
+	cat $CONFIG_FILE_PATH | grep -v $1 > $tmpdir
+	mv $tmpdir $CONFIG_FILE_PATH
 }
 
 ##

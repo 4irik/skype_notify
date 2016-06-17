@@ -6,6 +6,7 @@
 
 # импортируем функции
 . params_common.sh
+. exit_codes.sh
 . func_common.sh
 . func_config.sh
 . func_white_list.sh

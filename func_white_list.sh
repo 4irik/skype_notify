@@ -11,8 +11,9 @@
 ##
 wl_exclude_user ()
 {
-	cat $WHITE_LIST_FILE | grep -v $1 > /tmp/wl-tmp
-	mv /tmp/wl-tmp $WHITE_LIST_FILE
+	local tmpdir=`mktemp` || { exit $EXIT_ERROR_CREATE_TMPFILE; }
+	cat $WHITE_LIST_FILE | grep -v $1 > $tmpdir
+	mv $tmpdir $WHITE_LIST_FILE
 }
 
 ##
